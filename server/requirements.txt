@@ -1,1 +1,3 @@
 fastapi[standard]
+sqlmodel
+argon2-cffi
