@@ -1,3 +1,5 @@
 fastapi[standard]
 sqlmodel
 argon2-cffi
+pyjwt
+python-dotenv
