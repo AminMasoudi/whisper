@@ -3,6 +3,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.websockets import WebSocketDisconnect
 
+from utils.security import TokenDep, access_token_decoder
 from models import User
 from db.database import create_db_and_tables
 from api.routes import auth
@@ -29,6 +30,10 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World!"}
 
+@app.get("/protected")
+async def root(token: TokenDep):
+    return {"message": access_token_decoder(token)}
+
 
 @app.websocket("/ws/chat")
 async def chat_endpoint(websocket: WebSocket):
@@ -41,4 +46,5 @@ async def chat_endpoint(websocket: WebSocket):
         pass
 
 
-app.include_router(auth.router)
+app.include_router(auth.router, prefix="/auth")
+    
