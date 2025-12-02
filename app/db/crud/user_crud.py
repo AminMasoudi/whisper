@@ -5,16 +5,20 @@ from models import User
 
 
 class UserCrud(BaseCrud):
-    @staticmethod
-    def create(session: Session, username: str, hashed_password: str) -> User:
-        e = session.get(User, username)
-        if e: raise HTTPException(409, "Username is duplicated.")
-        user = User(username=username, password=hashed_password)
+    @classmethod
+    def create(
+        cls, session: Session, username: str, hashed_password: str, display_name: str
+    ) -> User:
+        e = cls.retrieve(session, username)
+        if e is not None:
+            raise HTTPException(409, "Username is duplicated.")
+        user = User(username=username, password=hashed_password, display_name=display_name)
         session.add(user)
         session.commit()
         session.refresh(user)
         return user
-    
-    @staticmethod
-    def retrieve(session: Session, username: str) -> User | None:
-        return session.get(User, username)
+
+    @classmethod
+    def retrieve(cls, session: Session, username: str) -> User | None:
+        statement = select(User).where(User.username == username)
+        return session.exec(statement).one_or_none()

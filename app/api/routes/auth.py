@@ -9,9 +9,17 @@ router = APIRouter()
 
 @router.post("/register")
 def register(user: AuthRegister, session: SessionDep):
-    user = AuthService.register(session, user.username, user.password)
+    user = AuthService.register(
+        session, user.username, user.password, user.display_name
+    )
     return {"username": user.username}
 
+
 @router.post("/login")
-def login(form_data:  TokenFormLogin, session:SessionDep):
-    return {"access_token": AuthService.login(session, form_data.username, form_data.password), "token_type": "bearer"}
+def login(form_data: TokenFormLogin, session: SessionDep):
+    return {
+        "access_token": AuthService.login(
+            session, form_data.username, form_data.password
+        ),
+        "token_type": "bearer",
+    }
