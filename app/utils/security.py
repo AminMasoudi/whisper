@@ -15,7 +15,8 @@ TokenFormLogin = Annotated[OAuth2PasswordRequestForm, Depends()]
 def access_token_generator(user: User) -> str:
     iat = datetime.now(tz=config.TIME_ZONE)
     payload = {
-        "sub": user.username,
+        "sub": user.id.hex,
+        "name": user.username,
         "iat": iat,
         "exp": iat + config.JWT_EXP_TIMEDELTA,
     }
