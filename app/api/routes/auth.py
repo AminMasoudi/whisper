@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from schemas.user_schema import AuthRegister
 from db.database import SessionDep
 from services.auth_service import AuthService
-from utils.security import TokenFormLogin
+from utils.security import TokenDep, TokenFormLogin
 
 router = APIRouter()
 
@@ -23,3 +23,8 @@ def login(form_data: TokenFormLogin, session: SessionDep):
         ),
         "token_type": "bearer",
     }
+
+
+@router.get("/me")
+def me(token: TokenDep):
+    return AuthService.user_info(token)

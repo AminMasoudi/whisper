@@ -16,7 +16,8 @@ def access_token_generator(user: User) -> str:
     iat = datetime.now(tz=config.TIME_ZONE)
     payload = {
         "sub": user.id.hex,
-        "name": user.username,
+        "username": user.username,
+        "display_name": user.display_name,
         "iat": iat,
         "exp": iat + config.JWT_EXP_TIMEDELTA,
     }
